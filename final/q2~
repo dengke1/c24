@@ -1,0 +1,47 @@
+(define ops
+  (list (cons '+ (lambda (x y) (+ x y))) ;strictly binary versions of +,-,*,/
+        (cons '- (lambda (x y) (- x y)))
+        (cons '* (lambda (x y) (* x y)))
+        (cons '/ (lambda (x y) (/ x y)))
+        (cons 'plus42 (λ (x) (+ x 42)))
+        (cons '~ (lambda (x) (- x)))               ;unary -
+        (cons 'abs abs)                            ;absolute value
+        (cons 'sign (lambda (x) (cond [(< x 0) -1] ;sign
+                              [(= x 0) 0]
+                              [else 1])))))
+
+;; (evaluate expr context)
+;; Return the result of evaluating a fully parenthesized arithmetic
+;; expression expr in the given context.
+(define evaluate 
+  (lambda (expr context)
+    (cond [(number? expr) expr]
+          [(symbol? expr) (value-of expr context)]
+          [else
+
+;; (value-of var context)
+;; Return the value of var in given context.
+(define value-of
+  (lambda (var context)
+    (dict-ref context var)))
+
+;; (get-op op)
+;; Return a procedure that corresponds to op.
+(define get-op
+  (lambda (op)
+    (value-of op ops)))
+
+;; (op expr)
+;; Return the operation of the given expression.
+(define op
+  (lambda (expr)
+    (if (= (length expr) 2)
+        (first expr)
+        (second expr))))
+;; (args expr)
+;; Return the argumentsof the given expression.
+(define args
+  (lambda (expr)
+    (if (= (length expr) 2)
+        (rest expr)
+        (list (first expr) (third expr))))

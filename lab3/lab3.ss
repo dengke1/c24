@@ -1,0 +1,85 @@
+(module lab3 scheme
+
+  ;;; (my-length xs) -> int
+  ;;; xs: list
+  ;;; Return the length of xs.
+  (define my-length
+    (λ (xs) (if (empty? xs)
+                0
+                (+ 1 (my-length (rest xs))))))
+
+  ;;; (reverse xs) -> list
+  ;;; xs: list
+  ;;; Return the reverse of xs.
+  (define my-reverse
+    (λ (xs) (if (<= (my-length xs) 1)
+                xs
+                (append (reverse (rest xs)) (list(first xs))))))
+
+  ;;; (is-pal xs) -> boolean
+  ;;; xs: list
+  ;;; Return whether xs is a palindrome.
+  (define is-pal
+    (λ (xs) (or
+             (<= (length xs) 1)
+             (and
+              (eqv? (first xs) (last xs))
+              (is-pal (rem-last(rest xs)))))))
+  
+  ;;; define a procedure that removes last from lst
+  ;;; use this instead of reversing the list above twice
+  (define rem-last
+    (λ (xs) (if (= 1 (length xs))
+               '()
+               (cons (first xs) (rem-last (rest xs))))))
+  
+  ;;; (num-el xs) -> int
+  ;;; xs: list
+  ;;; Return the number of (non-list) elements of lst, on any nesting level.
+  (define num-el
+    (λ (xs) (if (empty? xs)
+                 0
+                 (if (list? (first xs))
+                            (+ (num-el (first xs)) (num-el (rest xs)))
+                            (if (= 1 (my-length xs))
+                            1
+                            (+ 1 (num-el (rest xs))))))))
+
+  ;;; (stutter xs) -> list
+  ;;; xs: list
+  ;;; Return a list, which repeats each element of lst.
+  (define stutter
+    (λ (xs) (if (empty? xs)
+                '()
+                (cons
+                 (first xs) (cons
+                             (first xs) (stutter (rest xs)))))))
+
+  ;;; (my-filter f xs) -> list
+  ;;; f: boolean-valued function applicable to every element of xs
+  ;;; xs: list
+  ;;; Return a list of those elements from xs that pass the function
+  ;;;  f (i.e., f(x) is true for element x in xs), in their original order.
+  (define my-filter
+    (λ (f xs) (if (empty? xs)
+                  '()
+                  (if (f (first xs))
+                      (cons (first xs) (my-filter f (rest xs)))
+                      (my-filter f (rest xs))))))
+
+  (define hello(λ (c)(if (> c 2) #t #f)))
+
+  ;;; (my-map f xs) -> list
+  ;;; f: function applicable to every element of xs
+  ;;; xs: list
+  ;;; Return the result of applying f to every element of xs.
+  (define my-map
+    (λ (f xs) (if (empty? xs)
+                  '()
+                  (cons
+                   (f (first xs))
+                   (my-map f (rest xs))))))
+  
+
+  (provide my-length my-reverse is-pal num-el stutter my-filter my-map)
+  )

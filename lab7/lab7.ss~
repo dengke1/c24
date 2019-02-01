@@ -1,0 +1,31 @@
+(module lab7 scheme
+  
+  ;;; define a tail-recursive, linear-time foldr without using
+  ;;; continuation passing style
+  (define (foldr-tail f s xs)
+      (letrec([tail (λ (f s xs res)
+                      (if (empty? xs)
+                          s
+                          (if (empty? (rest xs))
+                              (f (first xs) s)
+                              (tail f s (rest xs)
+                                    '(f (first xs) res)))))])
+        (tail f s xs '())))
+  
+  ;;; define a tail-recursive, linear-time foldr using CPS
+  (define (foldr-cps f s xs)
+      (letrec([cps (λ (s xs k)
+                     (if (empty? xs)
+                         (k 0)
+                         (if (empty? (rest xs))
+                             (k s (first xs))
+                             (cps s (rest xs)
+                              (λ (a b) (k a b))))))])
+        (cps s xs f)))
+  
+  ; define a tail-recursive linear-time version of map (a simplified version
+  ; that works on one list) using CPS
+  (define map-cps 42)
+  
+  (provide foldr-tail foldr-cps map-cps)
+  )

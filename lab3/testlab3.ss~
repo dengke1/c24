@@ -1,0 +1,10 @@
+#lang scheme
+
+(require "lab3.ss")
+(require test-engine/scheme-tests)
+
+(check-expect (my-length empty) 0)
+
+(check-expect (my-length '(1 2 3)) 3)
+  
+(test)

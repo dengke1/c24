@@ -1,0 +1,16 @@
+(module final scheme
+  
+  (define cond-apply
+    (λ (p f xs) (if (empty? xs)
+                    '()
+                    (cons (if (p (first xs))
+                              (f (first xs))
+                              (first xs))
+                          (cond-apply p f (rest xs))))))
+  
+  (define cond-map
+    (λ (p f xs) (map (λ (x) (if (p x)
+                                (f x)
+                                x))
+                     xs)))
+)
